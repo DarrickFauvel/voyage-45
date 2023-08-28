@@ -231,3 +231,8 @@ body {
 #footer img {
   max-width: 50px;
 }
+
+/* Error */
+.error {
+  color: rgb(255, 72, 72);
+}
