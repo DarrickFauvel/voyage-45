@@ -3,11 +3,7 @@ import darkMode from "./darkMode.js"
 import fetchData from "./fetchData.js"
 import displayTable from "./displayTable.js"
 
-displayTable(document.querySelector("table"));
-/* async function getData() {
-  const response = await fetch("https://data.nasa.gov/resource/gh4g-9sfh.json");
-  const data = await response.json();
-  return data;
+const API_URL = "https://data.nasa.gov/resource/gh4g-9sfh.json"
 
 // Application state
 const state = {
