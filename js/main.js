@@ -9,7 +9,14 @@ displayTable(document.querySelector("table"));
   const data = await response.json();
   return data;
 
-  //console.log(data);
+// Application state
+const state = {
+  meteorites: [],
+  loading: false,
+  error: {
+    isError: false,
+    message: "",
+  },
 }
 
 const meteoriteData = getData();
