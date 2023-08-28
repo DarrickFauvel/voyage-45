@@ -2,6 +2,7 @@
 import darkMode from "./darkMode.js"
 import fetchData from "./fetchData.js"
 import displayTable from "./displayTable.js"
+import clearInputs from "./clearInputs.js"
 
 const API_URL = "https://data.nasa.gov/resource/gh4g-9sfh.json"
 
@@ -22,6 +23,9 @@ async function main() {
   // Fetch meteorites data and display populated table
   state.meteorites = await fetchData(state, API_URL)
   displayTable(state, document.querySelector("table"))
+
+  // Run clear inputs module
+  clearInputs()
 }
 
 //Clear all input fields
