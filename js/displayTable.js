@@ -1,5 +1,3 @@
-const API_URL = "https://data.nasa.gov/resource/gh4g-9sfh.json";
-
 /* These headers can be reordered or individually omitted, 
   and the table will dynamically display accordingly */
 const headers = {
@@ -13,73 +11,67 @@ const headers = {
   reclat: "recLat",
   reclong: "recLong",
   geolocation: "Geolocation",
-};
+}
 
 function renderTableHeader(table) {
-  const thead = table.querySelector("thead");
-  thead.innerHTML = "<tr></tr>";
+  const thead = table.querySelector("thead")
+  thead.innerHTML = "<tr></tr>"
 
   // Loop over header properties in the headers object
   for (const headerProperty in headers) {
-    const th = document.createElement("th");
-    th.textContent = headers[headerProperty];
-    thead.querySelector("tr").appendChild(th);
+    const th = document.createElement("th")
+    th.textContent = headers[headerProperty]
+    thead.querySelector("tr").appendChild(th)
   }
 }
 
-async function renderTableBody(table) {
-  const tbody = table.querySelector("tbody");
-  tbody.innerHTML = "<tr><td>Loading...</td></tr>";
+async function renderTableBody(state, table) {
+  const tbody = table.querySelector("tbody")
 
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) {
-      throw new Error("Network response was not OK");
-    }
-    const meteorites = await response.json();
+  if (state.error.isError) {
+    tbody.innerHTML = `<tr><td class="error" colspan=${
+      Object.keys(headers).length
+    }>${state.error.message}</td></tr>`
+    return
+  }
 
-    tbody.innerHTML = "";
+  tbody.innerHTML = "<tr><td>Loading...</td></tr>"
 
-    // Loop over meteorites array of meteorite objects
-    for (const meteorite of meteorites) {
-      const tr = document.createElement("tr");
-      // Loop over header properties in the headers object
-      for (const headerProperty in headers) {
-        // Loop over meteorite properties in the meteorite object
-        for (const meteoriteProperty in meteorite) {
-          // Check if both header property and meteorite property are a match
-          if (headerProperty === meteoriteProperty) {
-            const td = document.createElement("td");
-            // Check for geolocation propeerty
-            if (headerProperty === "geolocation") {
-              // Insert geolocation cell data
-              td.textContent = `
+  const meteorites = state.meteorites
+
+  tbody.innerHTML = ""
+
+  // Loop over meteorites array of meteorite objects
+  for (const meteorite of meteorites) {
+    const tr = document.createElement("tr")
+    // Loop over header properties in the headers object
+    for (const headerProperty in headers) {
+      // Loop over meteorite properties in the meteorite object
+      for (const meteoriteProperty in meteorite) {
+        // Check if both header property and meteorite property are a match
+        if (headerProperty === meteoriteProperty) {
+          const td = document.createElement("td")
+          // Check for geolocation propeerty
+          if (headerProperty === "geolocation") {
+            // Insert geolocation cell data
+            td.textContent = `
                 Latitude: ${meteorite.geolocation.latitude}\n
-                Longitude: ${meteorite.geolocation.longitude}`;
-            } else {
-              // Insert meteorite cell data
-              td.textContent = `${meteorite[meteoriteProperty]}`;
-            }
-            tr.appendChild(td);
+                Longitude: ${meteorite.geolocation.longitude}`
+          } else {
+            // Insert meteorite cell data
+            td.textContent = `${meteorite[meteoriteProperty]}`
           }
+          tr.appendChild(td)
         }
       }
-      tbody.appendChild(tr);
     }
-  } catch (error) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan=${Object.keys(headers).length}>
-          Sorry! There was a problem fetching the data.
-        </td>
-      </tr>`;
-    console.error("There was a problem with your fetch operation:", error);
+    tbody.appendChild(tr)
   }
 }
 
-function displayTable(table) {
-  renderTableHeader(table);
-  renderTableBody(table);
+function displayTable(state, table) {
+  renderTableHeader(table)
+  renderTableBody(state, table)
 }
 
-export default displayTable;
+export default displayTable
